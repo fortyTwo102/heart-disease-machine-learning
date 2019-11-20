@@ -1,0 +1,9 @@
+1. Adding charts and graphs to be more descriptive visually.
+
+2. Improving the accuracy using different Machine Learning algorithms, and see how they perform against Logistic Regression as a classifier.
+
+3. Cleaning the data and use methods like feature scaling and regularization to improve the accuracy of the model.
+
+4. Using different perfromence measures such as confusion matrix and F-Score to get a better idea of how different models are performing.
+
+5. Doing a thorough background research about the feature being used, and other features from the original 1987 survey to polish the input of our model.

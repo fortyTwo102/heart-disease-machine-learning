@@ -1,0 +1,11 @@
+1. Dataset was taken from the popular UCI Machine Learning Repository 
+
+http://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/
+
+2. The Python in-built machine learning module "Scikit-Learn"
+
+https://scikit-learn.org/stable/
+
+3. Understanding of the Algorithms and various Data Science costructs from the popular MOOC by Andrew Ng
+
+https://www.coursera.org/learn/machine-learning-with-python
