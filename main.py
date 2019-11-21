@@ -21,6 +21,8 @@ imp.fit(dataset)
 dataset = pd.DataFrame(imp.transform(dataset))
 dataset.columns = header_row
 
+print(dataset)
+
 # Extracting the features and the results
 
 X, y = dataset.iloc[:,:-1], dataset.iloc[:, -1]
