@@ -2,10 +2,18 @@ import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier, plot_importance
+from sklearn.model_selection import train_test_split, GridSearchCV
 import seaborn as sns
 import matplotlib.pyplot as plt
 import sklearn.metrics as metrics
+from sklearn import metrics, preprocessing 
+from sklearn.svm import SVC
+from scipy import stats
+from sklearn.ensemble import RandomForestClassifier
+
+import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
 
 # info about the features used
 
@@ -31,28 +39,36 @@ corr = df.corr()
 
 
 f, ax = plt.subplots()
-sns.heatmap(corr, vmax=.8,annot_kws={'size': 20}, annot=False);
-plt.show()
+# sns.heatmap(corr, vmax=.8,annot_kws={'size': 20}, annot=False);
+# plt.show()
 
 # Extracting the features and the results
 
 X, y = dataset.iloc[:,:-1], dataset.iloc[:, -1]
 
+X = preprocessing.scale(X)
+
 # Splitting the dataset into training and test sets to remove bias
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, \
 
-test_size=1/3, random_state=2)
+test_size=1/4, random_state=2)
+
+
 
 
 # Using Logistic Regression as the algorithm for classification
 
-model = LogisticRegression()
+model = LogisticRegression(C = 0.1)
+
 model.fit(X_train, y_train)
+
 score = model.score(X_test, y_test)
+
 
 y_pred = model.predict(X_test)
 confusion_matrix = metrics.confusion_matrix(y_test,y_pred)
+
 
 
 # The output suggests the % of times the model can correctly 
@@ -75,7 +91,7 @@ result = pd.DataFrame({
 f, ax = plt.subplots()
 sns.heatmap(result, vmax=62,annot_kws={'size': 10}, annot=False);
 
-plt.show()
+# plt.show()
 
 print ("True Negative =", tn, ", False Positive =", fp)
 print ("False Negative =", fn, ", True Positive =", tp)
