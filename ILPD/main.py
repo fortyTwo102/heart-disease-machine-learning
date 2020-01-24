@@ -11,7 +11,7 @@ from itertools import combinations
 
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier, plot_importance
-from sklearn.svm import SVC
+from sklearn.svm import SVC, LinearSVC
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
@@ -46,7 +46,7 @@ for i in range(1,11): # no. of columns at a time
 		X_train = X_train[columns]
 		X_test = X_test[columns]
 
-		model =  KNeighborsClassifier() # MLPClassifier(hidden_layer_sizes = (10, 5), max_iter = 10000) # LogisticRegression(solver = 'liblinear') # RandomForestClassifier() # SVC() #XGBClassifier() #LogisticRegression(C = 0.1)
+		model =  LinearSVC() # KNeighborsClassifier() # MLPClassifier(hidden_layer_sizes = (10, 5), max_iter = 10000) # LogisticRegression(solver = 'liblinear') # RandomForestClassifier() # SVC() #XGBClassifier() #LogisticRegression(C = 0.1)
 		model.fit(X_train, y_train)
 		#print(model.feature_importances_)
 		y_pred = model.predict(X_test)
