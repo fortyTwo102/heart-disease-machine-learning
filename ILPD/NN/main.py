@@ -40,15 +40,15 @@ for i in range(1,11): # no. of columns at a time
 
 		X = pd.DataFrame(X)
 
-		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/3, random_state = 2)
+		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
 
 
 		X_train = X_train[columns]
 		X_test = X_test[columns]
 
-		model =  LinearSVC() # KNeighborsClassifier() # MLPClassifier(hidden_layer_sizes = (10, 5), max_iter = 10000) # LogisticRegression(solver = 'liblinear') # RandomForestClassifier() # SVC() #XGBClassifier() #LogisticRegression(C = 0.1)
-		model.fit(X_train, y_train)
+		model =  MLPClassifier(hidden_layer_sizes = (400, 400), activation = 'logistic', solver = 'sgd', learning_rate_init = 0.26)
 		#print(model.feature_importances_)
+		model.fit(X_train, y_train)
 		y_pred = model.predict(X_test)
 
 		accuracy = round(float((model.score(X_test, y_test)*100)),2)
@@ -57,7 +57,8 @@ for i in range(1,11): # no. of columns at a time
 
 			max_acc = accuracy
 			best_columns = columns
-			print("max till now", max_acc)
+		
+		print("max till now", max_acc, best_columns)
 
 
 print("Accuracy: ", max_acc, ' with ', best_columns)
@@ -74,3 +75,4 @@ print("Accuracy: ", max_acc, ' with ', best_columns)
 # Logistic with C = 1 Accuracy:  77.32  with  [0, 1, 3, 4, 5, 6, 8]
 # MLPClassifier + hidden_layer_sizes (10, 5) +  max_iter = 10000 Accuracy:  78.35  with  [0, 3, 5, 7, 8, 9]
 # KNeightborsClassifier Accuracy:  76.29  with  [2, 5, 6]
+# LogisticRegression Accuracy:  78.08  with  [0, 1, 2, 3, 5, 6, 8] test_size=1/4
