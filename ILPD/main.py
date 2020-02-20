@@ -10,16 +10,15 @@ from sklearn.impute import SimpleImputer
 from itertools import combinations
 
 from sklearn.linear_model import LogisticRegression
-'''
 from xgboost import XGBClassifier, plot_importance
 from sklearn.svm import SVC, LinearSVC
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
-'''
 
-dataset = pd.read_csv('dataset1.csv')
+
+dataset = pd.read_csv('dataset.csv')
 
 dataset = dataset.replace(" ",np.NaN)
 imp = SimpleImputer(missing_values=np.NaN, strategy='most_frequent')
@@ -28,47 +27,40 @@ dataset = pd.DataFrame(imp.transform(dataset))
 
 X, y = dataset.iloc[:, :-1], dataset.iloc[:, -1]
 X = preprocessing.scale(X)
-X = pd.DataFrame(X)
 
 max_acc = 0
 
-best_penalty = ''
-best_C = 0
-best_tol = 0
+X = pd.DataFrame(X)
+
+for i in range(1,11): # no. of columns at a time
+
+	for columns in combinations(range(10),i): # all combinations of i columns
+
+		columns = list(columns)
+
+		X = pd.DataFrame(X)
+
+		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
 
 
+		X_train = X_train[columns]
+		X_test = X_test[columns]
 
-for C in [0.1, 1, 10, 100]:
+		model =  LogisticRegression()
+		#print(model.feature_importances_)
+		model.fit(X_train, y_train)
+		y_pred = model.predict(X_test)
 
-	for penalty in ['l1', 'l2']:
+		accuracy = round(float((model.score(X_test, y_test)*100)),2)
 
-		for tol in [0.001, 0.1, 0.01]:
+		if accuracy > max_acc:
 
-			X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
-
-			if penalty == 'l2':
-				model =  LogisticRegression(C = C, penalty = penalty, solver = 'lbfgs', tol = tol)
-
-			else:
-				model = LogisticRegression(C = C, penalty = penalty, tol = tol)	
-
-			model.fit(X_train, y_train)
-			y_pred = model.predict(X_test)
-
-			accuracy = round(float((model.score(X_test, y_test)*100)),2)
-
-			if accuracy > max_acc:
-
-				max_acc = accuracy
-
-				best_C = C
-				best_penalty = penalty
-				best_tol = tol
-			
-			print("Max Acuuracy 'till Now: ", max_acc, "With", best_C, best_penalty, best_tol)
+			max_acc = accuracy
+			best_columns = columns
+			print("max till now", max_acc)
 
 
-print("Best Accuracy: ", max_acc, ' With ', best_C, best_penalty, best_tol)
+print("Accuracy: ", max_acc, ' with ', best_columns)
 
 
 # Logistic with C = 0.01 with [2,4,9] has 74.74% accuracy 

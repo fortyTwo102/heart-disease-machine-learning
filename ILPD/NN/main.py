@@ -46,7 +46,7 @@ for i in range(1,11): # no. of columns at a time
 		X_train = X_train[columns]
 		X_test = X_test[columns]
 
-		model =  MLPClassifier(hidden_layer_sizes = (400, 400), activation = 'logistic', solver = 'sgd', learning_rate_init = 0.26)
+		model =  MLPClassifier(hidden_layer_sizes = (400, 400), activation = 'relu', solver = 'sgd', learning_rate_init = 0.01, max_iter = 100000)
 		#print(model.feature_importances_)
 		model.fit(X_train, y_train)
 		y_pred = model.predict(X_test)
