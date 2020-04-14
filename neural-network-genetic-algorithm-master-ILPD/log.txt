@@ -1,0 +1,2 @@
+04/11/2020 09:10:58 PM - INFO - ***Evolving 10 generations with population 20***
+04/11/2020 09:10:58 PM - INFO - ***Doing generation 1 of 10***

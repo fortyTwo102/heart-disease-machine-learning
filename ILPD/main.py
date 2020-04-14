@@ -51,6 +51,8 @@ for i in range(1,11): # no. of columns at a time
 		model.fit(X_train, y_train)
 		y_pred = model.predict(X_test)
 
+		print(X_train.shape, X_test.shape)
+
 		accuracy = round(float((model.score(X_test, y_test)*100)),2)
 
 		if accuracy > max_acc:
