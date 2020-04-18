@@ -1,6 +1,7 @@
 import csv
 import pandas as pd
 import numpy as np
+# import matplotlib.pyplot as plt
 
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
@@ -15,6 +16,7 @@ from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import KFold
 
 
 dataset = pd.read_csv('dataset.csv')
@@ -25,11 +27,13 @@ imp.fit(dataset)
 dataset = pd.DataFrame(imp.transform(dataset))
 
 X, y = dataset.iloc[:, :-1], dataset.iloc[:, -1]
-X = preprocessing.scale(X)
 
 max_acc = 0
 
 X = pd.DataFrame(X)
+X = preprocessing.scale(X)
+
+best_test_index, best_train_index = 0, 0
 
 for i in range(1,11): # no. of columns at a time
 
@@ -39,29 +43,41 @@ for i in range(1,11): # no. of columns at a time
 
 		X = pd.DataFrame(X)
 
-		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
+		kf = KFold(n_splits=2)
+		kf.get_n_splits(X)
+
+		for train_index, test_index in kf.split(X):
+
+			print('TRAIN:', train_index,'TEST:', test_index)
+
+			X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+			y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+
+		# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
+			X_train = X_train[columns]
+			X_test = X_test[columns]
+		# scaler = preprocessing.StandardScaler()
+		# X_train = scaler.fit_transform(X_train)
+		# X_test = scaler.transform(X_test)
+
+			model =  LogisticRegression()
+			#print(model.feature_importances_)
+			model.fit(X_train, y_train)
+			y_pred = model.predict(X_test)
+
+			accuracy = round(float((model.score(X_test, y_test)*100)),2)
+
+			if accuracy > max_acc:
+
+				max_acc = accuracy
+				best_columns = columns
+				print("max till now", max_acc)
+
+				best_train_index = train_index
+				best_test_index = test_index
 
 
-		X_train = X_train[columns]
-		X_test = X_test[columns]
-
-		model =  RandomForestClassifier(n_estimators = 10000)#LogisticRegression(C = 10000000)
-		#print(model.feature_importances_)
-		model.fit(X_train, y_train)
-		y_pred = model.predict(X_test)
-
-		print(X_train.shape, X_test.shape)
-
-		accuracy = round(float((model.score(X_test, y_test)*100)),2)
-
-		if accuracy > max_acc:
-
-			max_acc = accuracy
-			best_columns = columns
-			print("max till now", max_acc)
-
-
-print("Accuracy: ", max_acc, ' with ', best_columns)
+print("Accuracy: ", max_acc, ' with ', best_columns, best_train_index, best_test_index)
 
 
 # Logistic with C = 0.01 with [2,4,9] has 74.74% accuracy 
@@ -76,8 +92,4 @@ print("Accuracy: ", max_acc, ' with ', best_columns)
 # MLPClassifier + hidden_layer_sizes (10, 5) +  max_iter = 10000 Accuracy:  78.35  with  [0, 3, 5, 7, 8, 9]
 # KNeightborsClassifier Accuracy:  76.29  with  [2, 5, 6]
 # LogisticRegression Accuracy:  78.08  with  [0, 1, 2, 3, 5, 6, 8] test_size=1/4
-
-# new script with
-# proper scaling
-# data binning
-# accuracy_score
+# LogisticRegression + StandardScaler Accuracy:  78.08  with  [0, 1, 3, 5, 6, 8]

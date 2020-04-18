@@ -15,53 +15,45 @@ from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
+from xgboost import XGBClassifier
 
 
 dataset = pd.read_csv('dataset.csv')
 
 dataset = dataset.replace(" ",np.NaN)
-imp = SimpleImputer(missing_values=np.NaN, strategy='most_frequent')
+imp = SimpleImputer(missing_values=np.NaN, strategy='mean')
 imp.fit(dataset)
 dataset = pd.DataFrame(imp.transform(dataset))
 
 X, y = dataset.iloc[:, :-1], dataset.iloc[:, -1]
-X = preprocessing.scale(X)
+X.columns = ['AGE','GENDER', 'TB','DB','ALKPHOS','SGPT','SGOT','TP','ALB','A/G']
 
-max_acc = 0
+X = X.drop(['ALKPHOS','TP','A/G'], axis = 1)
 
-X = pd.DataFrame(X)
-
-for i in range(1,11): # no. of columns at a time
-
-	for columns in combinations(range(10),i): # all combinations of i columns
-
-		columns = list(columns)
-
-		X = pd.DataFrame(X)
-
-		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
+print(X.head)
 
 
-		X_train = X_train[columns]
-		X_test = X_test[columns]
-
-		model =  RandomForestClassifier(n_estimators = 10000)#LogisticRegression(C = 10000000)
-		#print(model.feature_importances_)
-		model.fit(X_train, y_train)
-		y_pred = model.predict(X_test)
-
-		print(X_train.shape, X_test.shape)
-
-		accuracy = round(float((model.score(X_test, y_test)*100)),2)
-
-		if accuracy > max_acc:
-
-			max_acc = accuracy
-			best_columns = columns
-			print("max till now", max_acc)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
 
 
-print("Accuracy: ", max_acc, ' with ', best_columns)
+scaler = preprocessing.StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+
+model = LogisticRegression(C = 10) # XGBClassifier(n_estimators = 1000, random_state = 2) #RandomForestClassifier(n_estimators = 10000)#
+
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+# print(X_train.shape, X_test.shape)
+
+# accuracy = round(float((model.score(X_test, y_test)*100)),2)
+
+accuracy = round(accuracy_score(y_test, y_pred)*100, 2)
+
+
+print("Accuracy: ", accuracy)
 
 
 # Logistic with C = 0.01 with [2,4,9] has 74.74% accuracy 
@@ -75,8 +67,8 @@ print("Accuracy: ", max_acc, ' with ', best_columns)
 # Logistic with C = 1 Accuracy:  77.32  with  [0, 1, 3, 4, 5, 6, 8]
 # MLPClassifier + hidden_layer_sizes (10, 5) +  max_iter = 10000 Accuracy:  78.35  with  [0, 3, 5, 7, 8, 9]
 # KNeightborsClassifier Accuracy:  76.29  with  [2, 5, 6]
-# LogisticRegression Accuracy:  78.08  with  [0, 1, 2, 3, 5, 6, 8] test_size=1/4
-
+# LogisticRegression Accuracy:  78.08  with  [0, 1, 2, 3, 5, 6, 8] test_size=1/4, StandardScaler, rand = 2, C = 10
+# 
 # new script with
 # proper scaling
 # data binning

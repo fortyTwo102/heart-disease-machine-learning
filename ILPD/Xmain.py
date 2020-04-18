@@ -25,11 +25,10 @@ imp.fit(dataset)
 dataset = pd.DataFrame(imp.transform(dataset))
 
 X, y = dataset.iloc[:, :-1], dataset.iloc[:, -1]
-X = preprocessing.scale(X)
 
 max_acc = 0
 
-X = pd.DataFrame(X)
+
 
 for i in range(1,11): # no. of columns at a time
 
@@ -45,14 +44,20 @@ for i in range(1,11): # no. of columns at a time
 		X_train = X_train[columns]
 		X_test = X_test[columns]
 
-		model =  RandomForestClassifier(n_estimators = 10000)#LogisticRegression(C = 10000000)
+		scaler = preprocessing.StandardScaler()
+		X_train = scaler.fit_transform(X_train)
+		X_test = scaler.transform(X_test)
+
+		model = RandomForestClassifier(n_estimators = 1000, random_state = 2) #LogisticRegression(random_state = 2) #RandomForestClassifier(n_estimators = 10000)#
 		#print(model.feature_importances_)
 		model.fit(X_train, y_train)
 		y_pred = model.predict(X_test)
 
-		print(X_train.shape, X_test.shape)
+		# print(X_train.shape, X_test.shape)
 
-		accuracy = round(float((model.score(X_test, y_test)*100)),2)
+		# accuracy = round(float((model.score(X_test, y_test)*100)),2)
+
+		accuracy = round(accuracy_score(y_test, y_pred)*100, 2)
 
 		if accuracy > max_acc:
 

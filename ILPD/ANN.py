@@ -21,7 +21,7 @@ imp.fit(dataset)
 dataset = pd.DataFrame(imp.transform(dataset))
 
 X, y = dataset.iloc[:, :-1], dataset.iloc[:, -1]
-X = preprocessing.scale(X)
+
 # define the keras model
 
 max_acc = 0
@@ -36,10 +36,14 @@ for i in range(1,11): # no. of columns at a time
 
 		X = pd.DataFrame(X)
 
-		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/3, random_state = 2)
+		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
 
 		X_train = X_train[columns]
 		X_test = X_test[columns]
+
+		scaler = preprocessing.StandardScaler()
+		X_train = scaler.fit_transform(X_train)
+		X_test = scaler.transform(X_test)
 
 
 		model = Sequential()
