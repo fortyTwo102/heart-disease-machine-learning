@@ -48,7 +48,7 @@ for i in range(1,11): # no. of columns at a time
 		X_train = scaler.fit_transform(X_train)
 		X_test = scaler.transform(X_test)
 
-		model = RandomForestClassifier(n_estimators = 1000, random_state = 2) #LogisticRegression(random_state = 2) #RandomForestClassifier(n_estimators = 10000)#
+		model = LogisticRegression(C = 1) #RandomForestClassifier(n_estimators = 10000)#
 		#print(model.feature_importances_)
 		model.fit(X_train, y_train)
 		y_pred = model.predict(X_test)

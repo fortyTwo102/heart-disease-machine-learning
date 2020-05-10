@@ -28,7 +28,7 @@ dataset = pd.DataFrame(imp.transform(dataset))
 X, y = dataset.iloc[:, :-1], dataset.iloc[:, -1]
 X.columns = ['AGE','GENDER', 'TB','DB','ALKPHOS','SGPT','SGOT','TP','ALB','A/G']
 
-X = X.drop(['ALKPHOS','TP','A/G'], axis = 1)
+# X = X.drop(['ALKPHOS','TP','A/G'], axis = 1)
 
 print(X.head)
 

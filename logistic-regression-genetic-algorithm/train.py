@@ -86,7 +86,7 @@ def get_ILPD():
 
     X, y = dataset.iloc[:, :-1], dataset.iloc[:, -1]
     X.columns = ['AGE','GENDER', 'TB','DB','ALKPHOS','SGPT','SGOT','TP','ALB','A/G']
-    X = X.drop(['ALKPHOS','TP','A/G'], axis = 1)
+    X = X.drop(['ALKPHOS','TB','TP','A/G'], axis = 1)
 
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 1/4, random_state = 2)
@@ -154,7 +154,7 @@ def train_and_score(network, dataset):
             x_test, y_train, y_test = get_mnist()
 
     
-    model = LogisticRegression(C = network['C'], tol = network['tol'])
+    model = LogisticRegression(C = network['C'], tol = network['tol'], penalty = network['penalty'])
 
     model.fit(x_train, y_train)
 

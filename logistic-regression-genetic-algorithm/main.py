@@ -8,7 +8,7 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%m/%d/%Y %I:%M:%S %p',
     level=logging.DEBUG,
-    filename='log.txt'
+    filename='log1.txt'
 )
 
 def train_networks(networks, dataset):
@@ -92,13 +92,13 @@ def print_networks(networks):
 
 def main():
     """Evolve a network."""
-    generations = 15  # Number of times to evole the population.
-    population = 25  # Number of networks in each generation.
+    generations = 50  # Number of times to evole the population.
+    population = 50  # Number of networks in each generation.
     dataset = 'cifar10'
 
     nn_param_choices = {
-    	'C' : [0.1, 1, 10, 100],
-    	'tol' : [0.01, 0.1, 1, 10],
+    	'C' : [0.1, 1, 10, 100, 1000, 10000, 100000],
+    	'tol' : [0.001, 0.01, 0.1, 1, 10, 100],
     }
 
     logging.info("***Evolving %d generations with population %d***" %
